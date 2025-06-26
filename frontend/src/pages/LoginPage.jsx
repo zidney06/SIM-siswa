@@ -3,14 +3,14 @@ import { Link } from "react-router";
 export default function LoginPage() {
   return (
     <>
-      <div className="container-fluid red p-0">
-        <div className="container red p-0">
+      <div className="container-fluid p-0" style={{ height: "100vh" }}>
+        <div className="container-fluid p-0 bg-secondary text-light border">
           <h3 className="text-center">Sistem informasi manajemen</h3>
         </div>
-        <div className="container red p-0">
+        <div className="container border p-0" style={{ height: "100%" }}>
           <h2 className="text-center">Login</h2>
           <div
-            className="container border border-2 mx-auto p-0 mb-5"
+            className="container border border-2 mx-auto p-2 mb-5"
             style={{ maxWidth: "380px" }}
           >
             <h3 className="text-center">username</h3>

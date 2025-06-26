@@ -6,6 +6,7 @@ import Dashboard from "./pages/DashboardPage";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
 import "./styles/style.css";
+import Biodata from "./pages/Biodata";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/biodata" element={<Biodata />} />
       </Routes>
     </>
   );
