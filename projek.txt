@@ -1,0 +1,383 @@
+APLIKASI SISTEM INFORMASI SISWA (SIS)
+
+deskripsi:
+Aplikasi akan memiliki fitur utama yaitu siswa atau wali murid dapat melihat informasi siswa bersangkutan, seperti informasi 
+mengenai kehadiran, biodata siswa, ranking sementara (Berdasarkan nilai yang didapat dari tugas yang diberikan), ranking setelah UTS atau UAS.
+sedangkan untuk guru memiliki akses untuk mengabsen siswa pada mapel yang diajar,
+jadwal mengajar, biodata diri, manajemen kelas yang di walikan (akses sebagai wali kelas seperti menambah data siswa). secara umum aplikasi
+ini akan meniru sistem dari SIM UNUGIRI dari segi fungsinya, untuk UI diharapkan akan responsif. dalam proyek kali ini, akan ada sebuah
+fitur role. dalam pengembangannya, gunakan unit test juga sebagai latihan.
+
+Fitur:
+untuk siswa:
+- melihat biodata diri
+- melihat riwayat ranking
+- melihat jumlah kehadiran
+- melihat nilai UTS dan UAS 
+- melihat jadwal pelajaran dan ujian
+
+untuk guru:
+- melihat biodata diri 
+- melihat kelas mana yang di walikan //gak ruh pe di gawe piye
+- melihat jadwal mengajar
+- mengisi nilai UTS, UAS (ranking akan otoatis dibuatkan oleh sistem)
+- mengabsen siswa
+
+untuk operator:
+- membuat data kelas baru (seperti kelas 11 A - C)
+- mengedit biodata siswa 
+- membuat jadwal pelajaran dan jadwal ujian
+- membuat dan mengedit data guru
+- mengset sudah bisa input nilai atau belum
+
+cara menupdate data siswa yang dabsen secara bersaman dan secara dinamis
+const update = dataSiswa.map(siswa => ({
+	updateOne: {
+		filter: {_id: siswa.id},
+		update: {
+			$inc: {
+				hadir: siswa.status === "hadir" ? 1 :0,
+				alpha: siswa.status === "alpha" ? 1 : 0,
+				izin: siswa.status === "izin" ? 1 : 0
+			}
+		}
+	}
+}))
+
+await Student.bulkWrite(update)
+#Penjelsan kode
+alasan mengapa setelah => terdapat () karena kita ingin mereturn sebuah objek, jika langsung kurung kurawal maka akan dianggap sebagai block code. ini bias diganti menggunakan return
+$inc digunakan untuk menambah nilai numerik pada filed tertentu di mongodb
+Student.bulkWrite() adalah method mongodb yang memungkinkan kita menjalankan banyak operasi tulis seperti (insert,
+update, delete) sekaligus dalam satu paggilan. Ini jauh ebih efisien dari pada menjalankan update satu persatu secara
+terpisah.
+
+dalam skema siswa tambahkan field untuk alpha, hadir, dan izin dengan type numerik
+
+#skema
+-- student
+- username
+- password
+- name
+- address
+- foto
+- placeAndDateofBirth
+- alpha
+- permission
+- presence
+- ranking
+- schedule
+- score
+- gender
+
+-- teacher
+- username
+- password
+- name
+- address
+- foto
+- placeAndDateofBirth
+- schedule
+- homeRoom
+- gender
+
+#openAPI
+- Login #done
+endpoint: /api/user/login
+method: post
+body: username, password
+respons:
+  status,
+  data: message, token
+
+-Logout #done
+endpoint:/api/user/logout
+method: post
+header:
+  Authentication:
+    `Bearer <token>`
+body: none
+respons:
+  status: 200,
+  message: "user berhasil logout"
+
+implementasi logout user ini dilakukan dengan cara memasukkan token user yang logout ke dalam db dengan collection blacklist, check dulu di be apakah token yang akan dibalcklist sudah di blacklist atau belum
+
+- ambil data dashboard siswa #done
+// untuk pengambilan data dashboard memakai route milik userRoutes karena logiknya sama
+endpoint: 
+  /api/student/dashboard-data
+method: get
+header:
+  Authentication:
+    `Bearer <token>`
+body: none
+respons:
+  status,
+  data:
+    presence:
+      alpha: 
+        amount,
+        alphaDate: [aphaDate. ex: 10-1-2025],
+      permission: 
+        amount,
+        permissionDate: [permissionDate. ex: 1-1-2025],
+      present
+    score
+
+- ambil data dashboard guru sama kayak yang siswa #done
+endpoint: /api/teacher/dashboard-data
+method: get
+header:
+  Authentication:
+    `Bearer <token>`
+body: none
+respons:
+  status: 200
+  data:
+    schedule:
+      monday: [schedule],
+      tuesday: [schedule]
+      wednesday: [schedule],
+      thursday: [schedule],
+      friday: [schedule],
+      saturday: [schedule]
+
+- biodata siswa #done
+endpoint: /api/student/biodata/:id
+method: get
+header:
+  Authentication:
+    `Bearer <token>`
+body: {}
+respons:
+  status,
+  data:
+    foto,
+    name,
+    address,
+    placeAndDateofBirth
+
+jika token sudah invalid maka berikan notifikasi bahwa token valid dan suruh login ulang lalu redirect ke halaman login
+
+-biodata guru sama kayak siswa #done
+endpoint: /api/teacher/biodata/:id
+method: get
+header:
+  Authentication:
+    `Bearer <token>`
+body: {}
+respons:
+  status,
+  data:
+    foto,
+    name,
+    address,
+    placeAndDateofBirth,
+    homeRoomTeacher
+
+jika token sudah invalid maka berikan notifikasi bahwa token valid dan suruh login ulang lalu redirect ke halaman login
+
+- ambil daftar siswa dari kelas yang dipilih #done
+endpoint: /api/class/:classId
+method: get
+header:
+  Authentication:
+    `Bearer <token>`
+respons:
+  status: 200
+  data: [objekSiswa]
+
+- Absensi siswa #done
+endpoint: /api/student/absensi
+method: post
+header:
+  Authentication:
+    `Bearer <token>`
+body: {
+  absensi: [
+    {
+      idSiswa1: "uhcyfe7yfeuhks"
+      kehadiran: "hadir"
+    },
+    {    
+      idSiswa2: "uhcyfe7yfeuhks"
+      kehadiran: "izin" 
+    },
+    {
+      idSiswa3: "uhcyfe7yfeuhks"
+      kehadiran: "alpha"
+    }
+  ]
+}
+
+#untuk body dibuat seperti itu
+
+- set nilai ujian siswa #done
+endpiont: /api/student/set-score/:idSiswa
+method: post
+header:
+  Authentication:
+    `Bearer <token>`
+body: 
+  UTS/UAS,
+  data: [{
+    semester
+    mapel,
+    nilai
+  }] // semua nilai mapel dimasukan bersamaan
+respons:
+  status: 201
+  msg,
+
+bentuk skema siswa untuk bagian nilai
+siswa.nilai.uts = [{mapel, nilai}, {mapel, nilai}]
+siswa.nilai.uas = [{mapel, nilai}, {mapel, nilai}]
+
+- membuat kelas baru #done
+endpoint: /api/class
+method: post
+header:
+  Authentication:
+    `Bearer <token>`
+body:
+  kelas,
+  ruang,
+  wali
+respons:
+  status: 201
+  msg: "Berhasil menambahkan kelas baru!"
+
+- edit kelas #done
+endpoint: /api/class/:classId
+method: put
+header:
+  Authentication:
+    `Bearer <token>`
+body:
+  kelas,
+  ruang,
+  wali
+respons:
+  status: 201
+  msg: "Berhasil merubah data kelas!"
+
+- ambil data siswa untuk role operator #done
+endpoint: /api/student/:page
+method: get
+header:
+  Authentication:
+    `Bearer <token>`
+body: none
+respons:
+  status: 200,
+  data: [arrayDataSiswa]
+
+#pengambilan data siswa ini dibatsi 30 siswa per halaman, implementasinya dalam mongodb bisa menggunakan skip() & limit(). cara penggunaannya tanya ai
+
+- menambah data siswa #done
+endpoint: /api/student
+method:post
+header:
+  Authentication:
+    `Bearer <token>`
+body:
+  foto,
+  nama,
+  alamat,
+  tmptTglLhr,
+  gender
+respons:
+  status: 201
+  msg: "Berhasil menambah data siswa!"
+
+- edit data siswa #done
+endpoint: /api/student/:studentId
+method: put
+header:
+  Authentication:
+    `Bearer <token>`
+body:
+  foto,
+  nama,
+  alamat,
+  tmptTglLhr,
+  gender
+respons:
+  status: 201
+  msg: "Berhasil merubah data siswa!"
+
+#untuk membuat dan mengedit data guru sebenarnya mirip dengan siswa, yang membedakanya hanyalah bodynya
+// karena logikanya sama maka untuk membuat dan mengedit data siswa dan guru diubah menjadi membuat dan mengedit data user
+endpoint: /api/teacher
+endpoint: /api/teacher/:teacherId
+body:
+  foto
+  nama,
+  alamat,
+  tmptTglLhr,
+  gender
+
+- daftar pelajaran tersedia // fitru jadwal dihapus karena dianggap tidak relevan
+- 
+
+Contoh penggunaan supertest
+describe("Tes class route", () => {
+  test("Tes membuat data kelas baru", async () => {
+    const res = await request(app)
+      .post("/api/class")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ name: "1-A", wali: "Hamzah" });
+
+    expect(res.status).toBe(201);
+
+    console.log(res.text);
+
+    const data = JSON.parse(res.text);
+
+    classId = data.data._id;
+  });
+
+  test("Membuat data student baru untuk dimasukan ke dalam kelas", async () => {
+    const res = await request(app)
+      .post("/api/user")
+      .set("Authorization", `Bearer ${token}`)
+      .field("username", "dimas")
+      .field("password", "dimas123")
+      .field("name", "Dimas Maulana")
+      .field("role", "student")
+      .field("address", "klepek")
+      .field("placeAndDateOfBirth", "sukosewu 12 Agustus 1999")
+      .field("gender", true)
+      .attach("photo", photoPath);
+
+    expect(res.status).toBe(201);
+
+    const respons = JSON.parse(res.text);
+
+    user = respons.data;
+  });
+
+  test("Memasukan data siswa kedalam kelas", async () => {
+    const res = await request(app)
+      .put(`/api/class/${classId}`)
+      .set("Authorization", `Bearer ${token}`)
+      .send({ studentId: user._id });
+
+    expect(res.status).toBe(201);
+    console.log(res.text);
+  });
+
+  test("Mengambil data kelas yang ada studentnya", async () => {
+    const res = await request(app)
+      .get(`/api/class/${classId}`)
+      .set("Authorization", `Bearer ${token}`);
+
+    expect(res.status).toBe(200);
+
+    const data = JSON.parse(res.text);
+    console.log(data.data);
+
+    expect(data.data).toHaveProperty("students");
+  });
+});
