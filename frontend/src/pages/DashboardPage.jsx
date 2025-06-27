@@ -2,7 +2,7 @@ import Navbar from "../components/Navbar";
 import { Link } from "react-router";
 
 export default function Dashboard() {
-  const role = "student";
+  const role = "operator";
 
   if (role == "operator") {
     return (
