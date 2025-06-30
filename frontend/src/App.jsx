@@ -6,7 +6,11 @@ import Dashboard from "./pages/DashboardPage";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
 import "./styles/style.css";
-import Biodata from "./pages/Biodata";
+import Biodata from "./pages/BiodataPage";
+import UserManage from "./pages/operator/UserManage";
+import ClassManage from "./pages/operator/ClassManage";
+import ClassList from "./pages/operator/ClassList";
+import UserList from "./pages/operator/UserList";
 
 function App() {
   return (
@@ -15,6 +19,10 @@ function App() {
         <Route path="/" element={<LoginPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/biodata" element={<Biodata />} />
+        <Route path="/operator/userManage" element={<UserManage />} />
+        <Route path="/operator/classManage" element={<ClassManage />} />
+        <Route path="/operator/classList" element={<ClassList />} />
+        <Route path="/operator/userList" element={<UserList />} />
       </Routes>
     </>
   );

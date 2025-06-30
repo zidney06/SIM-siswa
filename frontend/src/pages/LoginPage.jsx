@@ -4,7 +4,7 @@ export default function LoginPage() {
   return (
     <>
       <div className="container-fluid p-0" style={{ height: "100vh" }}>
-        <div className="container-fluid p-0 bg-secondary text-light border">
+        <div className="container-fluid p-0 bg-secondary text-light border border-secondary">
           <h3 className="text-center">Sistem informasi manajemen</h3>
         </div>
         <div className="container border p-0" style={{ height: "100%" }}>

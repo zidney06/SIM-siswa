@@ -1,5 +1,6 @@
 import Navbar from "../components/Navbar";
 import { Link } from "react-router";
+import DashboardOperator from "./operator/DashboardOperator";
 
 export default function Dashboard() {
   const role = "operator";
@@ -7,33 +8,7 @@ export default function Dashboard() {
   if (role == "operator") {
     return (
       <>
-        <Navbar />
-        <div className="container-fluid p-3">
-          <h2 className="text-center">
-            Selamat datang <i>{role}</i>
-          </h2>
-          <Link
-            to="/"
-            className="btn btn-outline-dark d-block my-3 text-decoration-none fs-4 mx-auto"
-            style={{ minWidth: "350px", maxWidth: "500px", width: "80%" }}
-          >
-            Buat/ tambah data siswa baru
-          </Link>
-          <Link
-            to="/"
-            className="btn btn-outline-dark d-block my-3 text-decoration-none fs-4 mx-auto"
-            style={{ minWidth: "350px", maxWidth: "500px", width: "80%" }}
-          >
-            Buat/ tambah data guru baru
-          </Link>
-          <Link
-            to="/"
-            className="btn btn-outline-dark d-block my-3 text-decoration-none fs-4 mx-auto"
-            style={{ minWidth: "350px", maxWidth: "500px", width: "80%" }}
-          >
-            Buat/ tambah data kelas baru
-          </Link>
-        </div>
+        <DashboardOperator />
       </>
     );
   } else if (role == "teacher") {
