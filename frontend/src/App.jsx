@@ -1,4 +1,3 @@
-import { useState } from "react";
 import "./App.css";
 import { Routes, Route } from "react-router";
 import LoginPage from "./pages/LoginPage";
@@ -11,6 +10,8 @@ import UserManage from "./pages/operator/UserManage";
 import ClassManage from "./pages/operator/ClassManage";
 import ClassList from "./pages/operator/ClassList";
 import UserList from "./pages/operator/UserList";
+import StudentPresence from "./pages/teacher/StudentPresence";
+import InputScore from "./pages/teacher/InputScore";
 
 function App() {
   return (
@@ -23,6 +24,8 @@ function App() {
         <Route path="/operator/classManage" element={<ClassManage />} />
         <Route path="/operator/classList" element={<ClassList />} />
         <Route path="/operator/userList" element={<UserList />} />
+        <Route path="/teacher/studentPresence" element={<StudentPresence />} />
+        <Route path="/teacher/inputScore" element={<InputScore />} />
       </Routes>
     </>
   );

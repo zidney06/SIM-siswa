@@ -1,9 +1,10 @@
 import Navbar from "../components/Navbar";
 import { Link } from "react-router";
 import DashboardOperator from "./operator/DashboardOperator";
+import DashboardTeacher from "./teacher/DashboardTeacher";
 
 export default function Dashboard() {
-  const role = "operator";
+  const role = "teacher";
 
   if (role == "operator") {
     return (
@@ -14,24 +15,7 @@ export default function Dashboard() {
   } else if (role == "teacher") {
     return (
       <>
-        <Navbar />
-        <div className="container-fluid p-3">
-          <h2 className="text-center">
-            Selamat datang <i>{role}</i>
-          </h2>
-          <Link
-            className="btn btn-outline-dark d-block my-3 text-decoration-none fs-4 mx-auto"
-            style={{ minWidth: "350px", maxWidth: "500px", width: "80%" }}
-          >
-            Absensi siswa
-          </Link>
-          <Link
-            className="btn btn-outline-dark d-block my-3 text-decoration-none fs-4 mx-auto"
-            style={{ minWidth: "350px", maxWidth: "500px", width: "80%" }}
-          >
-            Input nilai
-          </Link>
-        </div>
+        <DashboardTeacher />
       </>
     );
   } else if (role == "student") {
