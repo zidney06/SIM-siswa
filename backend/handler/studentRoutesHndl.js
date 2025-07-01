@@ -107,21 +107,30 @@ export const setScore = async (req, res) => {
     }
 
     if (body.type == "uts") {
-      if (student.profil.student.score.uts.length > 0) {
+      // cek apakah data untuk semester dari body.data.semester sudah ada?
+      const tes = student.profil.student.score.uts.some(
+        (item) => item.semester == body.data.semester
+      );
+      if (tes) {
         return res.status(400).json({
-          msg: `Data ${body.type} sudah diisi!`,
+          msg: "Data sudah di isi!",
         });
       }
 
-      student.profil.student.score.uts.push(...body.data);
+      student.profil.student.score.uts.push(body.data);
     } else if (body.type == "uas") {
-      if (student.profil.student.score.uas.length > 0) {
+      const tes = student.profil.student.score.uas.some(
+        (item) => item.semester == body.data.semester
+      );
+      if (tes) {
         return res.status(400).json({
-          msg: `Data ${body.type} sudah diisi!`,
+          msg: "Data sudah di isi!",
         });
       }
 
-      student.profil.student.score.uas.push(...body.data);
+      student.profil.student.score.uas.push(body.data);
+    } else {
+      res.status(400).json({ msg: "Ada salah tipe nilai. harus uts / uas" });
     }
 
     await student.save();

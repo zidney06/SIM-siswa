@@ -37,11 +37,25 @@ const rankSchema = new mongoose.Schema({
   rankHistory: [rankDateSchema],
 });
 
-const examSchema = new mongoose.Schema({
-  semester: String,
+const pointSchema = mongoose.Schema({
   subject: {
     type: String,
     enum: daftarMapel,
+  },
+  point: Number,
+});
+
+const examSchema = new mongoose.Schema({
+  semester: Number,
+  scores: {
+    type: [pointSchema],
+    validate: {
+      // membuat validasi agar jumlah data yang dikirimkan harus sebanyak panjang array daftarMapel
+      validator: function (arr) {
+        return arr.length == daftarMapel.length;
+      },
+      message: `Jumlah mapel yang dimasukan harus ${daftarMapel.length}`,
+    },
   },
   score: Number,
 });
@@ -50,14 +64,6 @@ const scoreSchema = new mongoose.Schema({
   uts: {
     type: [examSchema],
     default: [],
-    validate: {
-      // membuat validasi agar jumlah data yang dikirimkan harus sebanyak panjang array daftarMapel
-      validator: function (arr) {
-        console.log(arr);
-        return arr.length == daftarMapel.length;
-      },
-      message: `Jumlah mapel yang dimasukan harus ${daftarMapel.length}`,
-    },
   },
   uas: {
     type: [examSchema],
