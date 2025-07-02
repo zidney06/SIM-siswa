@@ -1,11 +1,11 @@
 import express from "express";
-import { verifyOperator, verifyToken } from "../middleware/middlewares";
+import { verifyOperator, verifyToken } from "../middleware/middlewares.js";
 import {
   createClass,
   deleteClass,
   editClass,
   getClass,
-} from "../handler/classRoutesHndl";
+} from "../handler/classRoutesHndl.js";
 
 const route = express.Router();
 

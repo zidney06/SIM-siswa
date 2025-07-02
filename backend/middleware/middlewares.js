@@ -2,23 +2,22 @@ import jwt from "jsonwebtoken";
 import multer from "multer";
 import fs from "fs";
 import path from "path";
-import Blacklist from "../models/blacklistToken.model";
+import Blacklist from "../models/blacklistToken.model.js";
 
 export const verifyToken = async (req, res, next) => {
   const token = req.header("Authorization")?.split(" ")[1];
-  if (!token) return res.status(401).json({ message: "Token tidak ditemukan" });
+  if (!token) return res.status(401).json({ msg: "Token tidak ditemukan" });
 
   // Periksa apakah token ada di blacklist
   const blacklisted = await Blacklist.findOne({ token });
-  if (blacklisted)
-    return res.status(403).json({ message: "Token tidak valid" });
+  if (blacklisted) return res.status(403).json({ msg: "Token tidak valid" });
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
     next();
   } catch (err) {
-    res.status(403).json({ message: "Token tidak valid" });
+    res.status(403).json({ msg: "Token tidak valid" });
   }
 };
 

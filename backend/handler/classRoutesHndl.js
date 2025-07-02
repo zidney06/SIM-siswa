@@ -35,6 +35,20 @@ export const getClass = async (req, res) => {
 export const createClass = async (req, res) => {
   const data = req.body;
   try {
+    if (!data.name || !data.wali) {
+      return res.status(400).json({
+        msg: "Data tidak lengkap",
+      });
+    }
+
+    const isExist = await Class.findOne({ name: data.name });
+
+    if (isExist) {
+      return res.status(400).json({
+        msg: "Data sudah dibuat",
+      });
+    }
+
     const newClass = new Class(data);
 
     await newClass.save();

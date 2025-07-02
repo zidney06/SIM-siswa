@@ -1,17 +1,16 @@
 import express from "express";
 import {
-  deleteStudent,
   getStudent,
   presenceStudent,
   setScore,
-} from "../handler/studentRoutesHndl";
+} from "../handler/studentRoutesHndl.js";
 import {
   verifyToken,
   upload,
   verifyStudent,
   verifyTeacher,
   verifyOperator,
-} from "../middleware/middlewares";
+} from "../middleware/middlewares.js";
 
 const route = express.Router();
 

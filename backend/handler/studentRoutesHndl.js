@@ -1,4 +1,4 @@
-import User from "../models/user.model";
+import User from "../models/user.model.js";
 
 // ambil data siswa 30 30 dulu
 export const getStudent = async (req, res) => {
@@ -108,10 +108,10 @@ export const setScore = async (req, res) => {
 
     if (body.type == "uts") {
       // cek apakah data untuk semester dari body.data.semester sudah ada?
-      const tes = student.profil.student.score.uts.some(
+      const isExist = student.profil.student.score.uts.some(
         (item) => item.semester == body.data.semester
       );
-      if (tes) {
+      if (isExist) {
         return res.status(400).json({
           msg: "Data sudah di isi!",
         });
@@ -119,10 +119,10 @@ export const setScore = async (req, res) => {
 
       student.profil.student.score.uts.push(body.data);
     } else if (body.type == "uas") {
-      const tes = student.profil.student.score.uas.some(
+      const isExist = student.profil.student.score.uas.some(
         (item) => item.semester == body.data.semester
       );
-      if (tes) {
+      if (isExist) {
         return res.status(400).json({
           msg: "Data sudah di isi!",
         });

@@ -1,4 +1,18 @@
-export default function CreateClassModal() {
+import { useState } from "react";
+
+export default function CreateClassModal({
+  setKelas,
+  setRoom,
+  hndlWali,
+  hndlClick,
+}) {
+  const hndlKelasChange = (e) => {
+    setKelas(e.target.value);
+  };
+  const hndlRoomChange = (e) => {
+    setRoom(e.target.value);
+  };
+
   // untuk bagian profil nanti akan dibuat di fe ketika akan melakukan request ke be
   return (
     <>
@@ -16,16 +30,41 @@ export default function CreateClassModal() {
           </div>
           <div className="">
             <div className="my-1">
-              <label htmlFor="name" className="form-label">
+              <label htmlFor="kelas" className="form-label">
                 Nama kelas
               </label>
-              <input type="text" id="name" className="form-control" />
+              <select className="form-select" onChange={hndlKelasChange}>
+                <option value=""></option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+              </select>
+              <label htmlFor="kelas" className="form-label">
+                Ruang
+              </label>
+              <select className="form-select" onChange={hndlRoomChange}>
+                <option value=""></option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+                <option value="F">F</option>
+                <option value="G">G</option>
+              </select>
             </div>
             <div className="my-1">
-              <label htmlFor="address" className="form-label">
-                Wali kelas
+              <label htmlFor="wali" className="form-label fs-6">
+                Nama wali kelas <i>Sebaiknya mengggunakan nama lengkap</i>
               </label>
-              <input type="text" id="address" className="form-control" />
+              <input
+                type="text"
+                id="wali"
+                className="form-control"
+                onChange={hndlWali}
+              />
             </div>
           </div>
           <div
@@ -39,8 +78,12 @@ export default function CreateClassModal() {
             >
               Close
             </button>
-            <button type="button" className="btn btn-primary">
-              Save changes
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={hndlClick}
+            >
+              Konfirmasi
             </button>
           </div>
         </div>

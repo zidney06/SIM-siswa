@@ -38,7 +38,7 @@ export const loginHandler = async (req, res) => {
     });
 
     res.status(200).json({
-      msg: `Berhasil! data: ${username}, ${password}`,
+      msg: `Berhasil!`,
       token: token,
       role: user.role,
     });

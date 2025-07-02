@@ -17,13 +17,13 @@ export default function CreateStudentModal() {
   return (
     <>
       <div className="" id="create" tabIndex="-1" aria-labelledby="createLabel">
-        <div className="yellow p-2">
+        <div className="border p-2">
           <div className="p-2">
             <h1 className=" fs-5" id="createLabel">
               Buat data baru
             </h1>
           </div>
-          <div className="green p-2">
+          <div className="border p-2">
             <div className="my-1">
               <label htmlFor="name" className="form-label">
                 Nama
@@ -82,7 +82,7 @@ export default function CreateStudentModal() {
                   value="teacher"
                   onChange={hndlStatusChange}
                 />
-                <label className="form-check-label" for="teacher">
+                <label className="form-check-label" htmlFor="teacher">
                   Guru
                 </label>
               </div>
@@ -95,7 +95,7 @@ export default function CreateStudentModal() {
                   value="student"
                   onChange={hndlStatusChange}
                 />
-                <label className="form-check-label" for="student">
+                <label className="form-check-label" htmlFor="student">
                   Murid
                 </label>
               </div>

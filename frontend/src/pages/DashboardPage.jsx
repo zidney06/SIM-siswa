@@ -3,23 +3,25 @@ import { Link } from "react-router";
 import DashboardOperator from "./operator/DashboardOperator";
 import DashboardTeacher from "./teacher/DashboardTeacher";
 import DashboardStudent from "./student/DashboardStudent";
+import { useContext } from "react";
+import { MyContext } from "../store/store";
 
 export default function Dashboard() {
-  const role = "student";
+  const store = useContext(MyContext);
 
-  if (role == "operator") {
+  if (store.value.role == "operator") {
     return (
       <>
         <DashboardOperator />
       </>
     );
-  } else if (role == "teacher") {
+  } else if (store.value.role == "teacher") {
     return (
       <>
         <DashboardTeacher />
       </>
     );
-  } else if (role == "student") {
+  } else if (store.value.role == "student") {
     return (
       <>
         <DashboardStudent />

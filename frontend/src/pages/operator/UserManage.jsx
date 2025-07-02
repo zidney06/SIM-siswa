@@ -8,7 +8,7 @@ export default function StudentManage() {
   return (
     <>
       <Navbar />
-      <div className="container-fluid p-4 red">
+      <div className="container-fluid p-4">
         <h3>Manajemen data user</h3>
 
         {/* Modal for Create Student */}
