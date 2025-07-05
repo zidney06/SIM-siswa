@@ -4,6 +4,7 @@ import {
   deleteUser,
   editUser,
   getBiodata,
+  getUser,
   loginHandler,
   logoutHandler,
 } from "../handler/userRoutesHndl.js";
@@ -11,11 +12,13 @@ import {
   verifyOperator,
   verifyToken,
   upload,
+  verifyTeacher,
 } from "../middleware/middlewares.js";
 
 const route = express.Router();
 
-route.get("/:userId", verifyToken, getBiodata);
+route.get("/getUserList/:page", verifyToken, verifyOperator, getUser);
+route.get("/biodata/:userId", verifyToken, getBiodata);
 route.post("/login", loginHandler);
 route.post("/logout", verifyToken, logoutHandler);
 route.post(

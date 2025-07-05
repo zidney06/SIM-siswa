@@ -1,6 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
+import path from "path";
 import dotenv from "dotenv";
 import { connectDb } from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
@@ -23,6 +24,11 @@ app.get("/", (req, res) => {
 app.use("/api/user", userRoutes);
 app.use("/api/student", studentRoutes);
 app.use("/api/class", classRoutes);
+
+app.use(
+  "/public/photos",
+  express.static(path.join(import.meta.dirname, "public/photos"))
+);
 
 app.listen(port, () => {
   connectDb();

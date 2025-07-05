@@ -32,6 +32,20 @@ export const getClass = async (req, res) => {
   }
 };
 
+export const getClassList = async (req, res) => {
+  try {
+    const data = await Class.find({});
+
+    res.status(200).json({
+      msg: "Data",
+      data: data,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: "Terjadi kelasalahan!" });
+  }
+};
+
 export const createClass = async (req, res) => {
   const data = req.body;
   try {
@@ -71,7 +85,9 @@ export const editClass = async (req, res) => {
   const data = req.body;
 
   try {
-    const classData = await Class.findById(classId);
+    const classData = await Class.findByIdAndUpdate(classId, data, {
+      new: true,
+    });
 
     if (!classData) {
       res.status(404).json({
@@ -81,14 +97,7 @@ export const editClass = async (req, res) => {
       return;
     }
 
-    if (data.studentId) {
-      console.log(classData.students);
-      classData.students.push(data.studentId);
-    }
-
-    classData.field = data;
-
-    await classData.save();
+    console.log(classData);
 
     res.status(201).json({
       msg: "Berhasil merubah data kelas",

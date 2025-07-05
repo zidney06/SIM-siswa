@@ -1,5 +1,126 @@
-export default function EditUserModal() {
-  // untuk bagian profil nanti akan dibuat di fe ketika akan melakukan request ke be
+import { useEffect, useRef, useState } from "react";
+import { putfetch } from "../utils/fetch";
+
+export default function EditUserModal({
+  name,
+  setName,
+  address,
+  setAddress,
+  username,
+  setUsername,
+  password,
+  setPassword,
+  placeAndDateOfBirth,
+  setPlaceAndDateOfBirth,
+  gender,
+  setGender,
+  role,
+  setRole,
+  imagePreview,
+  setImagePreview,
+  file,
+  setFile,
+  id,
+  gambar,
+  users,
+  setUsers,
+}) {
+  // lanjut mengatur imagenya
+  const [isStudent, setIsStudent] = useState(null);
+  const image = useRef(null);
+
+  const hndlName = (e) => {
+    setName(e.target.value);
+  };
+  const hndlUsername = (e) => {
+    setUsername(e.target.value);
+  };
+  const hndlPasssword = (e) => {
+    setPassword(e.target.value);
+  };
+  const hndlAddress = (e) => {
+    setAddress(e.target.value);
+  };
+  const hndlPlaceAndDateOfBirth = (e) => {
+    setPlaceAndDateOfBirth(e.target.value);
+  };
+  const hndlGender = (e) => {
+    const value = e.target.value == "true" ? true : false;
+    setGender(value);
+  };
+  const hndlStatusChange = (e) => {
+    const value = e.target.value == "student" ? "student" : "teacher";
+    setRole(value);
+  };
+  const hndlFileChange = (e) => {
+    setFile(e.target.files[0]);
+
+    if (e.target.files[0]) {
+      setImagePreview(URL.createObjectURL(e.target.files[0]));
+    }
+  };
+  const hndlConfirmEdit = () => {
+    // buat validasi, krim ke server dan reset input
+    const formData = new FormData();
+
+    formData.append("photo", file);
+    formData.append(
+      "data",
+      JSON.stringify({
+        username: username,
+        password: password,
+        name: name,
+        address: address,
+        placeAndDateOfBirth: placeAndDateOfBirth,
+        gender: gender,
+        role: role,
+        image: gambar,
+      })
+    );
+
+    putfetch(`/api/user/${id}`, formData).then((res) => {
+      if (!res.success) {
+        alert(res.response.data.msg);
+
+        return;
+      }
+
+      const newUsers = users.map((item) => {
+        if (item._id == res.data.data._id) {
+          return res.data.data;
+        }
+        return item;
+      });
+      setUsers(newUsers);
+
+      // reset input
+      resetValue();
+    });
+  };
+
+  console.log({
+    username: username,
+    password: password,
+    name: name,
+    address: address,
+    placeAndDateOfBirth: placeAndDateOfBirth,
+    gender: gender,
+    role: role,
+    image: gambar,
+  });
+
+  const resetValue = () => {
+    setUsername("");
+    setName("");
+    setPlaceAndDateOfBirth("");
+    setAddress("");
+    setGender(null);
+    setImagePreview("");
+    setRole("");
+    setFile(null);
+    image.current.files = null;
+    image.current.value = null;
+  };
   return (
     <>
       <div
@@ -19,6 +140,7 @@ export default function EditUserModal() {
                 className="btn-close"
                 data-bs-dismiss="modal"
                 aria-label="Close"
+                onClick={resetValue}
               ></button>
             </div>
             <div className="modal-body green">
@@ -26,13 +148,49 @@ export default function EditUserModal() {
                 <label htmlFor="name" className="form-label">
                   Nama
                 </label>
-                <input type="text" id="name" className="form-control" />
+                <input
+                  type="text"
+                  id="name"
+                  className="form-control"
+                  value={name}
+                  onChange={hndlName}
+                />
+              </div>
+              <div className="my-1">
+                <label htmlFor="name" className="form-label">
+                  username
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  className="form-control"
+                  value={username}
+                  onChange={hndlUsername}
+                />
+              </div>
+              <div className="my-1">
+                <label htmlFor="name" className="form-label">
+                  password
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  className="form-control"
+                  value={password}
+                  onChange={hndlPasssword}
+                />
               </div>
               <div className="my-1">
                 <label htmlFor="address" className="form-label">
                   Alamat
                 </label>
-                <input type="text" id="address" className="form-control" />
+                <input
+                  type="text"
+                  id="address"
+                  className="form-control"
+                  value={address}
+                  onChange={hndlAddress}
+                />
               </div>
               <div className="my-1">
                 <label htmlFor="placeAndDateOfBirth" className="form-label">
@@ -42,6 +200,8 @@ export default function EditUserModal() {
                   type="text"
                   id="placeAndDateOfBirth"
                   className="form-control"
+                  value={placeAndDateOfBirth}
+                  onChange={hndlPlaceAndDateOfBirth}
                 />
               </div>
               <div>
@@ -52,6 +212,9 @@ export default function EditUserModal() {
                     type="radio"
                     name="gender"
                     id="laki-laki"
+                    value={true}
+                    checked={gender ? true : false}
+                    onChange={hndlGender}
                   />
                   <label className="form-check-label" for="laki-laki">
                     Laki-laki
@@ -63,6 +226,9 @@ export default function EditUserModal() {
                     type="radio"
                     name="gender"
                     id="perempuan"
+                    value={false}
+                    checked={gender ? false : true}
+                    onChange={hndlGender}
                   />
                   <label className="form-check-label" for="perempuan">
                     Perempuan
@@ -75,10 +241,13 @@ export default function EditUserModal() {
                   <input
                     className="form-check-input"
                     type="radio"
-                    name="gender"
-                    id="laki-laki"
+                    name="role"
+                    id="teacher"
+                    value="teacher"
+                    checked={role == "teacher" && true}
+                    onChange={hndlStatusChange}
                   />
-                  <label className="form-check-label" for="laki-laki">
+                  <label className="form-check-label" for="teacher">
                     Guru
                   </label>
                 </div>
@@ -86,17 +255,24 @@ export default function EditUserModal() {
                   <input
                     className="form-check-input"
                     type="radio"
-                    name="gender"
-                    id="perempuan"
+                    name="role"
+                    id="student"
+                    value="student"
+                    checked={role == "student" && true}
+                    onChange={hndlStatusChange}
                   />
-                  <label className="form-check-label" for="perempuan">
+                  <label className="form-check-label" for="student">
                     Murid
                   </label>
                 </div>
               </div>
               <div className="my-1">
                 <img
-                  src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                  src={
+                    !file
+                      ? `${import.meta.env.VITE_BASE_URL}${imagePreview}`
+                      : imagePreview
+                  }
                   className="img red"
                   style={{ width: 100, height: 125 }}
                 />
@@ -107,7 +283,9 @@ export default function EditUserModal() {
                   type="file"
                   id="photo"
                   className="form-control"
+                  ref={image}
                   accept=".jpg, .jpeg, .png"
+                  onChange={hndlFileChange}
                 />
               </div>
             </div>
@@ -119,7 +297,12 @@ export default function EditUserModal() {
               >
                 Close
               </button>
-              <button type="button" className="btn btn-primary">
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={hndlConfirmEdit}
+                data-bs-dismiss="modal"
+              >
                 Save changes
               </button>
             </div>

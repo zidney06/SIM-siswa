@@ -1,9 +1,5 @@
 import express from "express";
-import {
-  getStudent,
-  presenceStudent,
-  setScore,
-} from "../handler/studentRoutesHndl.js";
+import { presenceStudent, setScore } from "../handler/studentRoutesHndl.js";
 import {
   verifyToken,
   upload,
@@ -12,9 +8,8 @@ import {
   verifyOperator,
 } from "../middleware/middlewares.js";
 
-const route = express.Router();
+export const route = express.Router();
 
-route.get("/get-student/:page", verifyToken, verifyOperator, getStudent);
 route.post("/presence", verifyToken, verifyTeacher, presenceStudent);
 route.post("/score/:studentId", verifyToken, verifyTeacher, setScore);
 

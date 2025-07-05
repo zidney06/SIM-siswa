@@ -1,4 +1,5 @@
 import User from "../models/user.model.js";
+import Class from "../models/class.model.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import Blacklist from "../models/blacklistToken.model.js";
@@ -62,6 +63,35 @@ export const logoutHandler = async (req, res) => {
   }
 };
 
+// ambil data siswa 10 10 dulu
+export const getUser = async (req, res) => {
+  const { page } = req.params;
+  const skip = (page - 1) * 10;
+
+  try {
+    const users = await User.find({ _id: { $ne: "684f7639b001ead0fe283716" } })
+      .skip(skip)
+      .limit(10);
+
+    if (users.length == 0) {
+      console.log(users);
+      return res.status(404).json({
+        msg: "Data tidak ditemukan",
+      });
+    }
+
+    res.status(200).json({
+      msg: "Berhasil",
+      data: users,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      msg: "Gagal!",
+    });
+  }
+};
+
 export const getBiodata = async (req, res) => {
   const { userId } = req.params;
 
@@ -86,6 +116,16 @@ export const getBiodata = async (req, res) => {
   }
 };
 
+function generateRandomString(length) {
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return result;
+}
+
 export const createUser = async (req, res) => {
   // cek apakah user mengirimkan file atau tidak
   if (!req.file) {
@@ -93,17 +133,28 @@ export const createUser = async (req, res) => {
   }
 
   try {
-    const data = req.body;
+    const data = JSON.parse(req.body.data);
 
     data.image = `/public/photos/${req.file.filename}`;
+    data.username = data.nim;
+    data.password = generateRandomString(8);
 
     const newUser = new User(data);
 
-    await newUser.save();
+    const newdata = await newUser.save();
+
+    let savedClass;
+    if (newdata.role == "student") {
+      const kelas = await Class.findOne({ name: data.className });
+
+      kelas.students.push(newUser._id);
+
+      savedClass = await kelas.save();
+    }
 
     return res.status(201).json({
       msg: "Berhasil membuat data baru!",
-      data: newUser,
+      data: { newUser, savedClass },
     });
   } catch (err) {
     console.log(err);
@@ -112,23 +163,18 @@ export const createUser = async (req, res) => {
 };
 
 export const editUser = async (req, res) => {
-  const id = req.params.userId;
-  const editedUser = req.body;
+  const userId = req.params.userId;
+  const editedUser = JSON.parse(req.body.data);
+
+  console.log(editedUser);
 
   try {
-    let user = await User.findById(id);
-
-    if (!user) {
-      res.status(404).json({
-        msg: "Data siswa tidak ditemukan!",
-      });
-
-      return;
-    }
-
     // jika ada file yang diupload
+
     if (req.file) {
-      const filePath = path.join(import.meta.dirname, `../${user.image}`);
+      const filePath = path.join(import.meta.dirname, `../${editedUser.image}`);
+
+      console.log(filePath);
 
       fs.unlink(filePath, (err) => {
         if (err) {
@@ -138,17 +184,25 @@ export const editUser = async (req, res) => {
       });
 
       editedUser.image = `/public/photos/${req.file.filename}`;
+
+      console.log(req.file.filename);
     }
 
-    // ini hanya akan mengubah field yang ada dalam editedUser. jika ada field yang tidak diisi maka field tersebut
-    // tidak berubah
-    user.field = editedUser;
+    const updatedUser = await User.findByIdAndUpdate(userId, editedUser, {
+      new: true,
+    });
 
-    const updateduser = await user.save();
+    if (!updatedUser) {
+      res.status(404).json({
+        msg: "Data siswa tidak ditemukan!",
+      });
+
+      return;
+    }
 
     res.status(201).json({
       msg: "Berhasl memperbarui data siswa",
-      data: updateduser,
+      data: updatedUser,
     });
   } catch (err) {
     console.log(err);

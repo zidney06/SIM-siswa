@@ -1,4 +1,18 @@
-export default function DeleteModal() {
+import { delFetch } from "../utils/fetch";
+
+export default function DeleteModal({ classId, classes, setClasses }) {
+  const hndlConfirm = () => {
+    delFetch(`/api/class/${classId}`).then((res) => {
+      if (!res.success) {
+        alert(res.respones.data.msg);
+
+        return;
+      }
+      const newClass = classes.filter((item) => item._id != res.data.data._id);
+      setClasses(newClass);
+    });
+  };
+
   return (
     <>
       <div
@@ -31,7 +45,12 @@ export default function DeleteModal() {
               >
                 Batal
               </button>
-              <button type="button" className="btn btn-primary">
+              <button
+                type="button"
+                className="btn btn-primary"
+                data-bs-dismiss="modal"
+                onClick={hndlConfirm}
+              >
                 Iya
               </button>
             </div>

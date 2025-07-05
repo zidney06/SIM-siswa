@@ -11,6 +11,7 @@ node_modules
 testing
 dist
 dist-ssr
+backend/public
 *.local
 
 # Editor directories and files

@@ -9,6 +9,8 @@ import { MyContext } from "../store/store";
 export default function Dashboard() {
   const store = useContext(MyContext);
 
+  console.log(store.value.role);
+
   if (store.value.role == "operator") {
     return (
       <>
@@ -32,7 +34,7 @@ export default function Dashboard() {
   return (
     <>
       <Navbar />
-      <h3>role tidak diketahui!</h3>
+      <h3>Role tidak diketahui!</h3>
       <Link to="/">Kembali ke login</Link>
     </>
   );

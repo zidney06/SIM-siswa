@@ -23,8 +23,6 @@ export const getFetch = async (url) => {
 export const postFetch = async (url, data) => {
   const token = sessionStorage.getItem("token");
 
-  console.log(baseUrl);
-
   try {
     const res = await axios.post(baseUrl + url, data, {
       headers: {

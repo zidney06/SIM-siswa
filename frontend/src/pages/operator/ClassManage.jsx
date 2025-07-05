@@ -29,7 +29,8 @@ export default function ClassManage() {
       if (!res.success) {
         alert(res.response.data.msg);
 
-        if (res.response.status == 403) {
+        if (res.response.status == 403 || res.response.status == 401) {
+          alert("Sesi sudah habis, harap login kembali");
           navigate("/");
           sessionStorage.removeItem("token");
         }

@@ -1,10 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import CreateUserModal from "../../components/CreateUserModal";
+import { getFetch } from "../../utils/fetch";
 
 export default function StudentManage() {
-  const [students, setStudents] = useState();
-
   return (
     <>
       <Navbar />

@@ -10,7 +10,8 @@ export const verifyToken = async (req, res, next) => {
 
   // Periksa apakah token ada di blacklist
   const blacklisted = await Blacklist.findOne({ token });
-  if (blacklisted) return res.status(403).json({ msg: "Token tidak valid" });
+  if (blacklisted)
+    return res.status(401).json({ msg: "Token sudah tidak valid" });
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -35,9 +36,7 @@ const storage = multer.diskStorage({
     cb(null, uploadir);
   },
   filename: (req, file, cb) => {
-    // beri nama unik pada file
-    const uniqueName =
-      Date.now() + req.body.username + path.extname(file.originalname);
+    const uniqueName = Date.now() + path.extname(file.originalname);
     cb(null, uniqueName);
   },
 });
