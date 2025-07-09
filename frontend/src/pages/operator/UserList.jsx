@@ -66,8 +66,8 @@ export default function UserList() {
     setGambar(imagePreview);
     setId(id);
   };
-  const hndlDeleteClick = () => {
-    console.log("hapus?");
+  const hndlDeleteClick = (id) => {
+    setId(id);
   };
   const hndlFIlterChange = (e) => {
     setFilter(e.target.value);
@@ -206,6 +206,7 @@ export default function UserList() {
                     className="btn btn-danger"
                     data-bs-toggle="modal"
                     data-bs-target="#delete"
+                    onClick={() => hndlDeleteClick(user._id)}
                   >
                     Hapus
                   </button>
@@ -241,7 +242,7 @@ export default function UserList() {
         setUsers={setUsers}
       />
       {/* Delete user */}
-      <DeleteModal />
+      <DeleteModal id={id} data={users} setData={setUsers} url="/api/user/" />
     </>
   );
 }

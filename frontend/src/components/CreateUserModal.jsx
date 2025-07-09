@@ -6,7 +6,7 @@ export default function CreateStudentModal() {
   const [classList, setClassList] = useState([]);
 
   const [name, setName] = useState("");
-  const [nim, setNim] = useState("");
+  const [username, setUsername] = useState("");
   const [address, setAddress] = useState("");
   const [placeAndDateOfBirth, setPlaceAndDateOfBirth] = useState("");
   const [gender, setGender] = useState(null);
@@ -31,8 +31,8 @@ export default function CreateStudentModal() {
   const hndlName = (e) => {
     setName(e.target.value);
   };
-  const hndlNim = (e) => {
-    setNim(e.target.value);
+  const hndlUsername = (e) => {
+    setUsername(e.target.value);
   };
   const hndlAddress = (e) => {
     setAddress(e.target.value);
@@ -69,7 +69,7 @@ export default function CreateStudentModal() {
     formData.append(
       "data",
       JSON.stringify({
-        nim: nim,
+        username: username,
         name: name,
         address: address,
         placeAndDateOfBirth: placeAndDateOfBirth,
@@ -91,7 +91,7 @@ export default function CreateStudentModal() {
     });
   };
   const resetValue = () => {
-    setNim("");
+    setUsername("");
     setName("");
     setPlaceAndDateOfBirth("");
     setAddress("");
@@ -127,15 +127,15 @@ export default function CreateStudentModal() {
           </div>
           <div className="border p-2">
             <div className="my-1">
-              <label htmlFor="NIM" className="form-label">
-                NIM
+              <label htmlFor="username" className="form-label">
+                Username
               </label>
               <input
                 type="text"
-                id="NIM"
-                value={nim}
+                id="username"
+                value={username}
                 className="form-control"
-                onChange={hndlNim}
+                onChange={hndlUsername}
               />
             </div>
             <div className="my-1">

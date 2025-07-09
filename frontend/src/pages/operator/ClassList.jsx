@@ -93,9 +93,10 @@ export default function ClassList() {
         setClasses={setClasses}
       />
       <DeleteModal
-        classId={classId}
-        classes={classes}
-        setClasses={setClasses}
+        id={classId}
+        data={classes}
+        setData={setClasses}
+        url="/api/class/"
       />
     </>
   );

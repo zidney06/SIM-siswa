@@ -1,36 +1,48 @@
+import { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
+import { getFetch } from "../../utils/fetch";
 
 export default function InputScore() {
-  const dummyClass = [
-    {
-      name: "1-A",
-      wali: "Hamzah",
-      students: ["01", "02"],
-    },
-    {
-      name: "2-A",
-      wali: "Hasan",
-      students: ["03", "04"],
-    },
-  ];
+  const [classes, setClasses] = useState([]);
+  const [students, setStudents] = useState([]);
+  const [selectedClass, setSelectedClass] = useState(null);
+  const [examType, setExapType] = useState("uts");
 
-  // data daftar siswa dari kelas yang dipilih awaknya adalah kosong, jika teacher sudah memilih kelas
-  // maka akan melakukan request untuk mengambil data siswa dari id kelas yang dipilih
-  // ini berarti, pada saat awal memuat halaman perlu melakukan req ke daftar kelas yang tersedia
-  const dummyStudent = [
-    {
-      name: "dimas",
-    },
-    {
-      name: "dimas",
-    },
-    {
-      name: "dimas",
-    },
-    {
-      name: "dimas",
-    },
-  ];
+  useEffect(() => {
+    getFetch("/api/class/classList").then((res) => {
+      if (!res.success) {
+        alert(res.response.data.msg);
+
+        return;
+      }
+      setClasses(res.data.data);
+    });
+  }, []);
+
+  const hndlSelectedClass = (e) => {
+    setSelectedClass(e.target.value);
+  };
+  const hndlConfirmSelectedClass = () => {
+    if (!selectedClass) {
+      alert("Pilih kelas dulu");
+      return;
+    }
+    console.log("oi");
+    getFetch(`/api/class/${selectedClass}`).then((res) => {
+      if (!res.success) {
+        alert(res.response.data.msg);
+
+        return;
+      }
+      setStudents(res.data.data.students);
+    });
+  };
+  const hndlExamType = (e) => {
+    setExapType(e.target.value);
+  };
+
+  console.log(classes, students, selectedClass, examType);
+
   return (
     <div className="container-fluid p-0">
       <Navbar />
@@ -41,25 +53,39 @@ export default function InputScore() {
             Pilih kelas
           </label>
 
-          <select name="kelas" id="kelas" className="form-select">
-            {dummyClass.map((kelas, i) => (
-              <option value={kelas.name} key={i}>
+          <select
+            name="kelas"
+            id="kelas"
+            className="form-select"
+            onChange={hndlSelectedClass}
+          >
+            <option value=""></option>
+            {classes.map((kelas, i) => (
+              <option value={kelas._id} key={i}>
                 {kelas.name}
               </option>
             ))}
           </select>
 
-          <button className="btn btn-primary my-2">Konfirmasi</button>
+          <button
+            className="btn btn-primary my-2"
+            onClick={hndlConfirmSelectedClass}
+          >
+            Konfirmasi
+          </button>
         </div>
-        {dummyStudent.length > 0 && (
+        {students.length > 0 ? (
           <div className="border my-2 p-2">
-            <h5>
-              Daftar siswa dengan kelas <i>{"kelas yang dipilih"}</i>
-            </h5>
+            <h5>Daftar siswa:</h5>
 
             <div className="my-2">
               <label htmlFor="tipe">Tipe nilai</label>
-              <select name="tipe" id="tipe" className="form-select">
+              <select
+                name="tipe"
+                id="tipe"
+                className="form-select"
+                onChange={hndlExamType}
+              >
                 <option value="uts">UTS</option>
                 <option value="uas">UAS</option>
               </select>
@@ -78,7 +104,7 @@ export default function InputScore() {
                 </tr>
               </thead>
               <tbody>
-                {dummyStudent.map((student, i) => (
+                {students.map((student, i) => (
                   <tr key={i}>
                     <th>{i + 1}</th>
                     <th>{student.name}</th>
@@ -131,9 +157,11 @@ export default function InputScore() {
                 ))}
               </tbody>
             </table>
+            <button className="btn btn-primary">Konfirmasi</button>
           </div>
+        ) : (
+          <p className="p-3 text-center">Tidak ada data</p>
         )}
-        <button className="btn btn-primary">Konfirmasi</button>
       </div>
     </div>
   );

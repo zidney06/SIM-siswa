@@ -11,6 +11,15 @@ export const presenceStudent = async (req, res) => {
   }
 
   try {
+    for (let student of students) {
+      if (!student.presence) {
+        console.log(student);
+        return res.status(400).json({
+          msg: "Ada data yang belum dichecklist!",
+        });
+      }
+    }
+
     for (const student of students) {
       let studentPresence;
       studentPresence = await User.findById(student.id);
@@ -20,38 +29,61 @@ export const presenceStudent = async (req, res) => {
           msg: "Data tidak ditemukan",
         });
       }
+      // logik buat ngecek apakah sudah diabsen hari ini atau belum
+      const today = new Date();
+      let sudahDiabsen = false;
+      const dateStudent = studentPresence.profil.student.presence.date;
 
-      // lakukan absensii berdasarkan status kehadiran
-      switch (student.presence) {
-        case "hadir":
-          studentPresence.profil.student.presence.present.amount += 1;
-          studentPresence.profil.student.presence.present.date.push(Date.now());
+      // cek dari array date, apakah tanggal sekarang sudah ada atau belum. jika ada maka sudahDiabsen = true
+      for (let i = 0; i < dateStudent.length; i++) {
+        const tes = new Date(dateStudent[i]);
 
-          break;
-        case "izin":
-          studentPresence.profil.student.presence.permission.amount += 1;
-          studentPresence.profil.student.presence.permission.date.push(
-            Date.now()
-          );
-
-          break;
-        case "alpha":
-          studentPresence.profil.student.presence.alpha.amount += 1;
-          studentPresence.profil.student.presence.alpha.date.push(Date.now());
-
-          break;
-        default:
-          console.log("ada yang salah");
-
-          break;
+        if (
+          tes.getDate() == today.getDate() &&
+          tes.getMonth() == today.getMonth()
+        ) {
+          sudahDiabsen = true;
+        }
       }
 
-      await studentPresence.save();
+      // apakah sudah diabsen hari ini?
+      if (!sudahDiabsen) {
+        // lakukan absensii berdasarkan status kehadiran
+        switch (student.presence) {
+          case "hadir":
+            studentPresence.profil.student.presence.present.date.push(
+              Date.now()
+            );
+            studentPresence.profil.student.presence.date.push(Date.now());
 
-      responseData.push(studentPresence);
+            break;
+          case "izin":
+            studentPresence.profil.student.presence.permission.date.push(
+              Date.now()
+            );
+            studentPresence.profil.student.presence.date.push(Date.now());
+
+            break;
+          case "alpha":
+            studentPresence.profil.student.presence.alpha.date.push(Date.now());
+            studentPresence.profil.student.presence.date.push(Date.now());
+
+            break;
+          default:
+            console.log("status presensi tidak valid");
+
+            break;
+        }
+
+        await studentPresence.save();
+
+        responseData.push(studentPresence.profil.student.presence);
+      } else {
+        responseData.push("sudah");
+      }
     }
     res.status(201).json({
-      msg: "Berhasil",
+      msg: "Berhasil mengabsen siswa!",
       data: responseData,
     });
   } catch (err) {

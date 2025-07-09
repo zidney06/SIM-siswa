@@ -1,6 +1,25 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { postFetch } from "../utils/fetch.js";
 
 export default function Navbar() {
+  const navigate = useNavigate();
+
+  const hndlLogout = () => {
+    postFetch("/api/user/logout").then((res) => {
+      if (!res.success) {
+        alert(res.response.data.msg);
+
+        if (res.status == 401) {
+          navigate("/");
+        }
+
+        return;
+      }
+      console.log(res.data);
+      sessionStorage.removeItem("token");
+      navigate("/");
+    });
+  };
   return (
     <>
       <nav className="navbar navbar-expand-lg bg-secondary">
@@ -24,9 +43,12 @@ export default function Navbar() {
               <Link className="nav-link" to="/biodata">
                 Biodata
               </Link>
-              <a className="nav-link" href="#">
+              <button
+                className="btn btn-link text-start text-decoration-none text-dark p-0"
+                onClick={hndlLogout}
+              >
                 Logout
-              </a>
+              </button>
             </div>
           </div>
         </div>

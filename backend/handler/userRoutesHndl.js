@@ -53,6 +53,8 @@ export const logoutHandler = async (req, res) => {
   const token = req.header("Authorization")?.split(" ")[1];
   if (!token) return res.status(400).json({ message: "Token tidak ditemukan" });
 
+  console.log(token);
+
   try {
     // Simpan token ke blacklist
     await Blacklist.create({ token });
@@ -136,7 +138,6 @@ export const createUser = async (req, res) => {
     const data = JSON.parse(req.body.data);
 
     data.image = `/public/photos/${req.file.filename}`;
-    data.username = data.nim;
     data.password = generateRandomString(8);
 
     const newUser = new User(data);

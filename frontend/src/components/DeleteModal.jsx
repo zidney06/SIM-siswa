@@ -1,17 +1,19 @@
 import { delFetch } from "../utils/fetch";
 
-export default function DeleteModal({ classId, classes, setClasses }) {
+export default function DeleteModal({ id, data, setData, url }) {
   const hndlConfirm = () => {
-    delFetch(`/api/class/${classId}`).then((res) => {
+    delFetch(url + id).then((res) => {
       if (!res.success) {
         alert(res.respones.data.msg);
 
         return;
       }
-      const newClass = classes.filter((item) => item._id != res.data.data._id);
-      setClasses(newClass);
+      const newData = data.filter((item) => item._id != res.data.data._id);
+      setData(newData);
     });
   };
+
+  console.log(url + id);
 
   return (
     <>

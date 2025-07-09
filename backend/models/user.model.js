@@ -4,10 +4,6 @@ const daftarMapel = ["MTK", "B Indo", "B Inggris", "IPA", "IPS"];
 
 // sub schemas
 const presenceDateSchema = new mongoose.Schema({
-  amount: {
-    type: Number,
-    default: 0,
-  },
   date: {
     type: [Date],
     default: [],
@@ -18,6 +14,7 @@ const presenceSchema = new mongoose.Schema({
   present: presenceDateSchema,
   permission: presenceDateSchema,
   alpha: presenceDateSchema,
+  date: [Date],
 });
 
 const rankDateSchema = new mongoose.Schema({
@@ -123,17 +120,15 @@ export const userSchema = new mongoose.Schema(
         default: {
           presence: {
             present: {
-              amount: 0,
               date: [],
             },
             permission: {
-              amount: 0,
               date: [],
             },
             alpha: {
-              amount: 0,
               date: [],
             },
+            date: [],
           },
           ranking: {
             best: {

@@ -58,8 +58,6 @@ export const verifyOperator = (req, res, next) => {
 export const verifyStudent = (req, res, next) => {
   const { role } = req.user;
 
-  console.log(role);
-
   if (role !== "student" && role !== "operator") {
     return res.status(401).json({
       msg: "Anda tidak memiliki akses!",
