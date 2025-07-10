@@ -11,6 +11,6 @@ import {
 export const route = express.Router();
 
 route.post("/presence", verifyToken, verifyTeacher, presenceStudent);
-route.post("/score/:studentId", verifyToken, verifyTeacher, setScore);
+route.post("/score", verifyToken, verifyTeacher, setScore);
 
 export default route;

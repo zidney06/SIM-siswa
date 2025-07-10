@@ -34,27 +34,13 @@ const rankSchema = new mongoose.Schema({
   rankHistory: [rankDateSchema],
 });
 
-const pointSchema = mongoose.Schema({
-  subject: {
-    type: String,
-    enum: daftarMapel,
-  },
-  point: Number,
-});
-
 const examSchema = new mongoose.Schema({
-  semester: Number,
-  scores: {
-    type: [pointSchema],
-    validate: {
-      // membuat validasi agar jumlah data yang dikirimkan harus sebanyak panjang array daftarMapel
-      validator: function (arr) {
-        return arr.length == daftarMapel.length;
-      },
-      message: `Jumlah mapel yang dimasukan harus ${daftarMapel.length}`,
-    },
-  },
-  score: Number,
+  semester: { type: Number, required: true },
+  bIndo: { type: Number, required: true },
+  bInggris: { type: Number, required: true },
+  MTK: { type: Number, required: true },
+  IPA: { type: Number, required: true },
+  IPS: { type: Number, required: true },
 });
 
 const scoreSchema = new mongoose.Schema({

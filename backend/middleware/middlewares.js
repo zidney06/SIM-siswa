@@ -18,7 +18,7 @@ export const verifyToken = async (req, res, next) => {
     req.user = decoded;
     next();
   } catch (err) {
-    res.status(403).json({ msg: "Token tidak valid" });
+    res.status(401).json({ msg: "Token tidak valid" });
   }
 };
 

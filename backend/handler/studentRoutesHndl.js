@@ -1,3 +1,4 @@
+import { response } from "express";
 import User from "../models/user.model.js";
 
 export const presenceStudent = async (req, res) => {
@@ -95,50 +96,75 @@ export const presenceStudent = async (req, res) => {
 };
 
 export const setScore = async (req, res) => {
-  const { studentId } = req.params;
-  const body = req.body;
+  const students = req.body.data;
+
+  let dummy = [];
+
+  let responses = [];
 
   try {
-    const student = await User.findById(studentId);
+    for (let item of students) {
+      const student = await User.findById(item.id);
 
-    if (!student) {
-      return res.status(404).json({
-        msg: "Data tidak ditemukan",
-      });
-    }
-
-    if (body.type == "uts") {
-      // cek apakah data untuk semester dari body.data.semester sudah ada?
-      const isExist = student.profil.student.score.uts.some(
-        (item) => item.semester == body.data.semester
-      );
-      if (isExist) {
-        return res.status(400).json({
-          msg: "Data sudah di isi!",
+      if (!student) {
+        return res.status(404).json({
+          msg: "Data tidak ditemukan",
         });
       }
 
-      student.profil.student.score.uts.push(body.data);
-    } else if (body.type == "uas") {
-      const isExist = student.profil.student.score.uas.some(
-        (item) => item.semester == body.data.semester
-      );
-      if (isExist) {
-        return res.status(400).json({
-          msg: "Data sudah di isi!",
+      if (req.body.type == "uts") {
+        // cek apakah data untuk semester dari student.data.semester sudah ada?
+        const isExist = student.profil.student.score.uts.some(
+          (item) => item.semester == req.body.semester
+        );
+        if (isExist) {
+          return res.status(400).json({
+            msg: "Data sudah di isi!",
+          });
+        }
+
+        student.profil.student.score.uts.push({
+          semester: req.body.semester,
+          bIndo: item.bIndo,
+          bInggris: item.bInggris,
+          MTK: item.MTK,
+          IPA: item.IPA,
+          IPS: item.IPS,
         });
+
+        console.log(student.profil.student.score.uts);
+      } else if (req.body.type == "uas") {
+        const isExist = student.profil.student.score.uas.some(
+          (item) => item.semester == req.body.semester
+        );
+        if (isExist) {
+          return res.status(400).json({
+            msg: "Data sudah di isi!",
+          });
+        }
+
+        student.profil.student.score.uas.push({
+          semester: req.body.semester,
+          bIndo: item.bIndo,
+          bInggris: item.bInggris,
+          MTK: item.MTK,
+          IPA: item.IPA,
+          IPS: item.IPS,
+        });
+      } else {
+        return res
+          .status(400)
+          .json({ msg: "Ada salah tipe nilai. harus uts / uas" });
       }
 
-      student.profil.student.score.uas.push(body.data);
-    } else {
-      res.status(400).json({ msg: "Ada salah tipe nilai. harus uts / uas" });
-    }
+      await student.save();
 
-    await student.save();
+      responses.push(student);
+    }
 
     res.status(201).json({
-      msg: "Oke",
-      data: student,
+      msg: "Berhasil menginput skor",
+      data: responses,
     });
   } catch (err) {
     console.log(err);
