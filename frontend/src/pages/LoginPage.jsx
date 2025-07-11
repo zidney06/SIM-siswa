@@ -31,9 +31,10 @@ export default function LoginPage() {
 
         return;
       }
-      console.log(res.data.token);
 
       store.setUserRole(res.data.role);
+      store.setId(res.data.id);
+      store.setName(res.data.name);
 
       sessionStorage.setItem("token", res.data.token);
       navigate("/dashboard");

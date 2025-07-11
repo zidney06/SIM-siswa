@@ -12,6 +12,8 @@ import ClassList from "./pages/operator/ClassList";
 import UserList from "./pages/operator/UserList";
 import StudentPresence from "./pages/teacher/StudentPresence";
 import InputScore from "./pages/teacher/InputScore";
+import PresencePage from "./pages/student/PresencePage";
+import ScorePage from "./pages/student/ScorePage";
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
         <Route path="/operator/userList" element={<UserList />} />
         <Route path="/teacher/studentPresence" element={<StudentPresence />} />
         <Route path="/teacher/inputScore" element={<InputScore />} />
+        <Route path="/student/presence" element={<PresencePage />} />
+        <Route path="/student/score" element={<ScorePage />} />
       </Routes>
     </>
   );

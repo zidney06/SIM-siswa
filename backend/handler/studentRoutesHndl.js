@@ -1,5 +1,52 @@
-import { response } from "express";
 import User from "../models/user.model.js";
+
+export const getStudentScore = async (req, res) => {
+  const { studentId } = req.params;
+
+  try {
+    const student = await User.findById(studentId);
+
+    if (!student) {
+      return res.status(404).json({
+        msg: "Data tidak ditemukan!",
+      });
+    }
+
+    res.status(200).json({
+      msg: "Berhasil mendapatkan data",
+      score: student.profil.student.score,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      msg: "Terjadi masalah dengan server!",
+    });
+  }
+};
+
+export const getStudentPresence = async (req, res) => {
+  const { studentId } = req.params;
+
+  try {
+    const student = await User.findById(studentId);
+
+    if (!student) {
+      return res.status(404).json({
+        msg: "Data tidak ditemukan!",
+      });
+    }
+
+    res.status(200).json({
+      msg: "Berhasil mendapatkan data",
+      presence: student.profil.student.presence,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      msg: "Terjadi kesalahan dalam server!",
+    });
+  }
+};
 
 export const presenceStudent = async (req, res) => {
   const students = req.body;

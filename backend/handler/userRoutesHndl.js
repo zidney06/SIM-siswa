@@ -42,6 +42,8 @@ export const loginHandler = async (req, res) => {
       msg: `Berhasil!`,
       token: token,
       role: user.role,
+      id: user._id,
+      name: user.name,
     });
   } catch (err) {
     console.log(err);

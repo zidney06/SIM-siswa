@@ -9,8 +9,6 @@ import { MyContext } from "../store/store";
 export default function Dashboard() {
   const store = useContext(MyContext);
 
-  console.log(store.value.role);
-
   if (store.value.role == "operator") {
     return (
       <>
