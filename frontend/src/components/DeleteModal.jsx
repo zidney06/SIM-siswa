@@ -13,8 +13,6 @@ export default function DeleteModal({ id, data, setData, url }) {
     });
   };
 
-  console.log(url + id);
-
   return (
     <>
       <div

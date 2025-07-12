@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { putfetch } from "../utils/fetch";
 
 export default function EditClassModal({
@@ -22,7 +21,6 @@ export default function EditClassModal({
     setWali(e.target.value);
   };
   const hndlClick = () => {
-    console.log("ready");
     putfetch(`/api/class/${classId}`, {
       name: `${kelas}-${room}`,
       wali: wali,
@@ -32,7 +30,6 @@ export default function EditClassModal({
 
         return;
       }
-      console.log(res.data.data.name);
       const newClasses = classes.map((item) => {
         if (item.name == res.data.data.name) {
           return res.data.data;

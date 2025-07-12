@@ -98,17 +98,6 @@ export default function EditUserModal({
     });
   };
 
-  console.log({
-    username: username,
-    password: password,
-    name: name,
-    address: address,
-    placeAndDateOfBirth: placeAndDateOfBirth,
-    gender: gender,
-    role: role,
-    image: gambar,
-  });
-
   const resetValue = () => {
     setUsername("");
     setName("");

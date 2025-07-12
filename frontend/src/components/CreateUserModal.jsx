@@ -104,17 +104,6 @@ export default function CreateStudentModal() {
     image.current.value = null;
   };
 
-  console.log(
-    name,
-    address,
-    placeAndDateOfBirth,
-    gender,
-    role,
-    className,
-    file,
-    imagePreview
-  );
-
   // untuk bagian profil nanti akan dibuat di fe ketika akan melakukan request ke usermanage maka akan mengambil daftar kelas yang sudah dibuat
   return (
     <>

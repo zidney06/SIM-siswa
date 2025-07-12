@@ -73,7 +73,7 @@ export const getUser = async (req, res) => {
   const skip = (page - 1) * 10;
 
   try {
-    const users = await User.find({ _id: { $ne: "684f7639b001ead0fe283716" } })
+    const users = await User.find({ role: { $ne: "operator" } })
       .skip(skip)
       .limit(10);
 

@@ -73,22 +73,22 @@ export default function UserList() {
     setFilter(e.target.value);
   };
   const hndlIncrement = () => {
-    setPage(page + 1);
-
     getFetch(`/api/user/getUserList/${page + 1}`).then((res) => {
       if (!res.success) {
         alert(res.response.data.msg);
-
-        setUsers([]);
 
         if (res.response.status == 403 || res.response.status == 401) {
           alert("Sesi sudah habis, harap login kembali");
           navigate("/");
           sessionStorage.removeItem("token");
+        } else if (res.status == 404) {
+          console.log(page, page - 1);
         }
         return;
+      } else if (res.status == 200) {
+        setUsers(res.data.data);
       }
-      setUsers(res.data.data);
+      setPage(page + 1);
     });
   };
   const hndlDecrement = () => {
@@ -114,13 +114,20 @@ export default function UserList() {
     });
   };
 
+  const filtered = users.filter((item) => {
+    if (!filter) {
+      return item;
+    }
+    if (item.role == filter) {
+      return item;
+    }
+  });
+
   return (
     <>
       <div className="container-fluid p-0">
         <Navbar />
-        <h4 className="mx-2">
-          Daftar user tersedia <i>Maksimal hanya menampilkan 10 data!</i>
-        </h4>
+        <h4 className="mx-2">Daftar user tersedia</h4>
         <div
           className="d-flex justify-content-between px-1"
           style={{ width: 150 }}
@@ -141,80 +148,84 @@ export default function UserList() {
             className="form-select"
             onChange={hndlFIlterChange}
           >
-            <option value=""></option>
+            <option value="">tampilkan semua</option>
             <option value="student">student</option>
             <option value="teacher">teacher</option>
           </select>
         </div>
-        <table className="table p-2">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Image</th>
-              <th scope="col">Nama</th>
-              <th scope="col">Alamat</th>
-              <th scope="col">Tempat tanggal lahir</th>
-              <th scope="col">username</th>
-              <th scope="col">password</th>
-              <th scope="col">gender</th>
-              <th scope="col">role</th>
-              <th scope="col" className="text-center">
-                Aksi
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user, i) => (
-              <tr key={i}>
-                <th>{i + 1}</th>
-                <th>
-                  <img
-                    src={`${import.meta.env.VITE_BASE_URL + user.image}`}
-                    style={{ width: 100, height: 125 }}
-                  />
-                </th>
-                <th>{user.name}</th>
-                <th>{user.address}</th>
-                <th>{user.placeAndDateOfBirth}</th>
-                <th>{user.username}</th>
-                <th>{user.password}</th>
-                <th>{user.gender ? "Laki-laki" : "Perempuan"}</th>
-                <th>{user.role}</th>
-                <th className="" style={{ height: "100%" }}>
-                  <button
-                    className="btn btn-primary"
-                    data-bs-toggle="modal"
-                    data-bs-target="#edit"
-                    onClick={() =>
-                      hndlEditClick(
-                        user.image,
-                        user.name,
-                        user.address,
-                        user.placeAndDateOfBirth,
-                        user.username,
-                        user.password,
-                        user.gender,
-                        user.role,
-                        user.image,
-                        user._id
-                      )
-                    }
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="btn btn-danger"
-                    data-bs-toggle="modal"
-                    data-bs-target="#delete"
-                    onClick={() => hndlDeleteClick(user._id)}
-                  >
-                    Hapus
-                  </button>
+        {filtered.length == 0 ? (
+          <h3 className="ms-3">Gak ada data</h3>
+        ) : (
+          <table className="table p-2">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Image</th>
+                <th scope="col">Nama</th>
+                <th scope="col">Alamat</th>
+                <th scope="col">Tempat tanggal lahir</th>
+                <th scope="col">username</th>
+                <th scope="col">password</th>
+                <th scope="col">gender</th>
+                <th scope="col">role</th>
+                <th scope="col" className="text-center">
+                  Aksi
                 </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filtered.map((user, i) => (
+                <tr key={i}>
+                  <th>{i + 1}</th>
+                  <th>
+                    <img
+                      src={`${import.meta.env.VITE_BASE_URL + user.image}`}
+                      style={{ width: 100, height: 125 }}
+                    />
+                  </th>
+                  <th>{user.name}</th>
+                  <th>{user.address}</th>
+                  <th>{user.placeAndDateOfBirth}</th>
+                  <th>{user.username}</th>
+                  <th>{user.password}</th>
+                  <th>{user.gender ? "Laki-laki" : "Perempuan"}</th>
+                  <th>{user.role}</th>
+                  <th className="" style={{ height: "100%" }}>
+                    <button
+                      className="btn btn-primary"
+                      data-bs-toggle="modal"
+                      data-bs-target="#edit"
+                      onClick={() =>
+                        hndlEditClick(
+                          user.image,
+                          user.name,
+                          user.address,
+                          user.placeAndDateOfBirth,
+                          user.username,
+                          user.password,
+                          user.gender,
+                          user.role,
+                          user.image,
+                          user._id
+                        )
+                      }
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="btn btn-danger"
+                      data-bs-toggle="modal"
+                      data-bs-target="#delete"
+                      onClick={() => hndlDeleteClick(user._id)}
+                    >
+                      Hapus
+                    </button>
+                  </th>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
       {/* Edit user modal */}
       <EditUserModal

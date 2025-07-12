@@ -15,7 +15,6 @@ export default function Navbar() {
 
         return;
       }
-      console.log(res.data);
       sessionStorage.removeItem("token");
       navigate("/");
     });
