@@ -205,7 +205,7 @@ export default function EditUserModal({
                     checked={gender ? true : false}
                     onChange={hndlGender}
                   />
-                  <label className="form-check-label" for="laki-laki">
+                  <label className="form-check-label" htmlFor="laki-laki">
                     Laki-laki
                   </label>
                 </div>

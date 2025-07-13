@@ -24,22 +24,32 @@ export default function ClassManage() {
       return;
     }
 
-    postFetch("/api/class/", { name: `${kelas}-${room}`, wali }).then((res) => {
-      console.log(res);
-      if (!res.success) {
-        alert(res.response.data.msg);
+    // postFetch("/api/class/", { name: `${kelas}-${room}`, wali }).then((res) => {
+    //   console.log(res);
+    //   if (!res.success) {
+    //     alert(res.response.data.msg);
 
-        if (res.response.status == 403 || res.response.status == 401) {
-          alert("Sesi sudah habis, harap login kembali");
-          navigate("/");
-          sessionStorage.removeItem("token");
-        }
+    //     if (res.response.status == 403 || res.response.status == 401) {
+    //       alert("Sesi sudah habis, harap login kembali");
+    //       navigate("/");
+    //       sessionStorage.removeItem("token");
+    //     }
 
-        return;
-      }
-      alert(res.data.msg);
-    });
+    //     return;
+    //   }
+    //   alert(res.data.msg);
+    // });
+
+    console.log({ name: `${kelas}-${room}`, wali });
+    resetValue();
   };
+  const resetValue = () => {
+    setKelas("");
+    setRoom("");
+    setWali("");
+  };
+
+  console.log({ name: `${kelas}-${room}`, wali });
 
   return (
     <>
@@ -48,10 +58,14 @@ export default function ClassManage() {
         <h3>Manajemen data kelas</h3>
         {/* Create class modal */}
         <CreateClassModal
+          kelas={kelas}
+          room={room}
+          wali={wali}
           setKelas={setKelas}
           setRoom={setRoom}
           hndlWali={hndlWali}
           hndlClick={hndlClick}
+          resetValue={resetValue}
         />
       </div>
     </>

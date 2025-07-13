@@ -3,6 +3,10 @@ export default function CreateClassModal({
   setRoom,
   hndlWali,
   hndlClick,
+  wali,
+  room,
+  kelas,
+  resetValue,
 }) {
   const hndlKelasChange = (e) => {
     setKelas(e.target.value);
@@ -31,7 +35,11 @@ export default function CreateClassModal({
               <label htmlFor="kelas" className="form-label">
                 Nama kelas
               </label>
-              <select className="form-select" onChange={hndlKelasChange}>
+              <select
+                className="form-select"
+                onChange={hndlKelasChange}
+                value={kelas}
+              >
                 <option value=""></option>
                 <option value="1">1</option>
                 <option value="2">2</option>
@@ -43,7 +51,11 @@ export default function CreateClassModal({
               <label htmlFor="kelas" className="form-label">
                 Ruang
               </label>
-              <select className="form-select" onChange={hndlRoomChange}>
+              <select
+                className="form-select"
+                onChange={hndlRoomChange}
+                value={room}
+              >
                 <option value=""></option>
                 <option value="A">A</option>
                 <option value="B">B</option>
@@ -61,6 +73,7 @@ export default function CreateClassModal({
                 type="text"
                 id="wali"
                 className="form-control"
+                value={wali}
                 onChange={hndlWali}
               />
             </div>
@@ -72,9 +85,9 @@ export default function CreateClassModal({
             <button
               type="button"
               className="btn btn-secondary"
-              data-bs-dismiss="modal"
+              onClick={resetValue}
             >
-              Close
+              Hapus
             </button>
             <button
               type="button"

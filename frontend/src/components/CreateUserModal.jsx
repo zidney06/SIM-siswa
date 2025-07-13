@@ -18,7 +18,6 @@ export default function CreateStudentModal() {
 
   useEffect(() => {
     getFetch("/api/class/classList").then((res) => {
-      console.log(res);
       if (!res.success) {
         alert(res.response.data.msg);
 
@@ -41,7 +40,7 @@ export default function CreateStudentModal() {
     setPlaceAndDateOfBirth(e.target.value);
   };
   const hndlGender = (e) => {
-    setGender(e.target.value);
+    setGender(Boolean(Number(e.target.value)));
   };
   const hndlStatusChange = (e) => {
     setRole(e.target.value);
@@ -65,6 +64,31 @@ export default function CreateStudentModal() {
     // buat validasi, krim ke server dan reset input
     const formData = new FormData();
 
+    if (gender == null) {
+      alert("Isi semua field yang masih kosong!");
+      return;
+    }
+    if (!username) {
+      alert("Isi semua field yang masih kosong!");
+      return;
+    }
+    if (!name) {
+      alert("Isi semua field yang masih kosong!");
+      return;
+    }
+    if (!address) {
+      alert("Isi semua field yang masih kosong!");
+      return;
+    }
+    if (!placeAndDateOfBirth) {
+      alert("Isi semua field yang masih kosong!");
+      return;
+    }
+    if (!role) {
+      alert("Isi semua field yang masih kosong!");
+      return;
+    }
+
     formData.append("photo", file);
     formData.append(
       "data",
@@ -73,14 +97,13 @@ export default function CreateStudentModal() {
         name: name,
         address: address,
         placeAndDateOfBirth: placeAndDateOfBirth,
-        gender: gender,
+        gender: Boolean(gender),
         role: role,
         className: className,
       })
     );
 
     postFetch("/api/user/", formData).then((res) => {
-      console.log(res);
       if (!res.success) {
         alert(res.response.data.msg);
 
@@ -104,7 +127,9 @@ export default function CreateStudentModal() {
     image.current.value = null;
   };
 
-  // untuk bagian profil nanti akan dibuat di fe ketika akan melakukan request ke usermanage maka akan mengambil daftar kelas yang sudah dibuat
+  console.log(Boolean(gender));
+  console.log(gender || gender != null, !gender || gender != null);
+
   return (
     <>
       <div className="" id="create" tabIndex="-1" aria-labelledby="createLabel">
@@ -171,7 +196,8 @@ export default function CreateStudentModal() {
                   type="radio"
                   name="gender"
                   id="laki-laki"
-                  value={true}
+                  value={1}
+                  checked={gender && gender != null ? true : false}
                   onChange={hndlGender}
                 />
                 <label className="form-check-label" htmlFor="laki-laki">
@@ -184,7 +210,8 @@ export default function CreateStudentModal() {
                   type="radio"
                   name="gender"
                   id="perempuan"
-                  value={false}
+                  value={0}
+                  checked={!gender && gender != null ? true : false}
                   onChange={hndlGender}
                 />
                 <label className="form-check-label" htmlFor="perempuan">
@@ -201,6 +228,7 @@ export default function CreateStudentModal() {
                   name="role"
                   id="teacher"
                   value="teacher"
+                  checked={role == "teacher" ? true : false}
                   onChange={hndlStatusChange}
                 />
                 <label className="form-check-label" htmlFor="teacher">
@@ -214,6 +242,7 @@ export default function CreateStudentModal() {
                   name="role"
                   id="student"
                   value="student"
+                  checked={role == "student" ? true : false}
                   onChange={hndlStatusChange}
                 />
                 <label className="form-check-label" htmlFor="student">
