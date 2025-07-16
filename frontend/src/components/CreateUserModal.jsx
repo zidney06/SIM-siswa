@@ -127,9 +127,6 @@ export default function CreateStudentModal() {
     image.current.value = null;
   };
 
-  console.log(Boolean(gender));
-  console.log(gender || gender != null, !gender || gender != null);
-
   return (
     <>
       <div className="" id="create" tabIndex="-1" aria-labelledby="createLabel">

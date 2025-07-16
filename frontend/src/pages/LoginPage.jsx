@@ -11,8 +11,6 @@ export default function LoginPage() {
 
   const navigate = useNavigate();
 
-  useEffect(() => {}, []);
-
   const store = useContext(MyContext);
 
   const hndlUsername = (e) => {
@@ -25,7 +23,6 @@ export default function LoginPage() {
 
   const hndlLogin = () => {
     postFetch("/api/user/login", { username, password }).then((res) => {
-      console.log(res);
       if (!res.success) {
         alert(res.response.data.msg);
 
@@ -38,7 +35,6 @@ export default function LoginPage() {
 
       sessionStorage.setItem("token", res.data.token);
       navigate("/dashboard");
-      console.log(res);
     });
   };
 

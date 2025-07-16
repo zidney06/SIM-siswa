@@ -49,8 +49,6 @@ export default function ClassManage() {
     setWali("");
   };
 
-  console.log({ name: `${kelas}-${room}`, wali });
-
   return (
     <>
       <Navbar />
